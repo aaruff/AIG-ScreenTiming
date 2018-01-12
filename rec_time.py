@@ -1,5 +1,5 @@
-import time
-import logging
+import datetime
+import pytz
 import argparse
 from sys import argv
 from os import remove
@@ -20,16 +20,18 @@ def remove_file(subject_id):
 
 def header(subject_id):
     with open(get_file_path(subject_id), 'a') as f:
-        f.write("subject, action, screen, timestamp\n")
+        f.write("subject, state, phase, time\n")
 
-def log(subject_id, timer_state, screen_id):
+def log(subject, state, phase, time):
     with open(get_file_path(subject_id), 'a') as f:
-        f.write("{}, {}, {}, {}\n".format(subject_id, timer_state,
-              screen_id, str(time.time())))
+        row_format = "{}, {}, {}, {}\n"
+        line = row_format.format(subject, state, phase, time)
+        f.write(line)
 
 if __name__ == "__main__":
     if len(argv) == 4:
-        log(argv[1], argv[2], argv[3])
+        dt = datetime.datetime.now(tz=pytz.utc)
+        log(argv[1], argv[2], argv[3], dt.isoformat())
     else:
         remove_file(argv[1])
         header(argv[1])
