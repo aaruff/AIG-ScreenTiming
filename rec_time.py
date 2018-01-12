@@ -13,7 +13,6 @@ def get_file_path(subject):
 def remove_file(subject):
     file = get_file_path(subject)
     try:
-        print(file)
         remove(file)
     except OSError:
         pass
